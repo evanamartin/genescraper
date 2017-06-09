@@ -1,0 +1,29 @@
+Package: geneScrapeR
+Type: Package
+Title: Scrape NCBI databases
+Version: 0.1.0
+Author: Evan A Martin
+Maintainer: Evan A Martin <evanamartin@gmail.com>
+Description: Mines genes mentioned in the abstracts from publications
+    on the NCBI website.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+  AnnotationDbi,
+  doParallel,
+  dplyr,
+  foreach,
+  magrittr,
+  org.Hs.eg.db,
+  parallel,
+  pubmed.mineR,
+  rentrez,
+  stringr,
+  tibble
+Suggests:
+  knitr,
+  rmarkdown,
+  ggplot2
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1

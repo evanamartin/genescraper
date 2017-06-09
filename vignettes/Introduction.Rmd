@@ -1,0 +1,58 @@
+---
+title: "Introduction"
+author: "Evan A Martin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r,echo=FALSE,results='hide',message=FALSE}
+knitr::opts_chunk$set(collapse = T, comment = '')
+options(tibble.print_min = 5)
+library (geneScrapeR)
+```
+
+The main reason geneScrapeR was created is to extract the names of the genes mentioned in publications from the NCBI databases. Any of the databases on this site can be searched but we will focus on publications in PubMed. There are two functions in geneScrapeR. The fist function, scrapeIDs, uses the R package rentrez to search publications from NCBI databases and extract their ID. This function stores all of the IDs from publications that match your search criteria in a list. The second function, scrapeGenes, uses the R package pubmed.mineR and the IDs from the scrapeIDs function to search each abstract and extract the names of the genes mentioned. This function may take a very long time to run. The runtime for searching one abstract and extracting the genes mentioned in it is aproximately 1 second. The function can run in parallel but if you are searching hundreds of thousands of abstracts it can take many hours. The output of scrapeGenes is a tibble with the names of the genes in the first column and the number of times each gene was mentioned in the second column. Only genes that match a gene in the org.Hs.egSYMBOL2EG database are kept. e.g. Prostate specific antigen (PSA) is not listed in org.Hs.egSYMBOL2EG as PSA. It is listed as KLK3. As a result any mention of PSA will not be reported in the scrapeGenes output. Below is an example of the output of these two funcitons.
+
+
+```{r}
+pmids <- scrapeIDs (dataBase = 'pubmed',
+                    term = 'prostate cancer[MeSH])')
+
+pmids[1:10]
+```
+
+The scrapeIDs returns a list of all of the IDs that match the serach criteria. These IDs can then be passed to the scrapeGenes function. Which accesses the NCBI website and extracts all of the genes associated with each article.
+
+```{r}
+genes <- scrapeGenes (IDs = pmids,
+                      nCores = 2,
+                      nArticles = 300)
+
+genes
+```
+
+Using ggplot2 we can look at which genes are most commonly mentioned in connection with prostate cancer. To make the plot more readable we will only look at the top 25.
+
+```{r,message=FALSE}
+library (ggplot2)
+library (magrittr)
+library (dplyr)
+
+genes %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  ggplot () +
+  geom_bar (mapping = aes (x = geneNames, y = n),
+            stat = 'identity',
+            width = 0.5) +
+  xlab ('Gene') +
+  ylab ('Counts') +
+  theme (axis.text.x = element_text (angle = 90, hjust = 1))
+```
+
+Here is another reminder that the genes returned by the function scrapeGenes are only the genes that match the names in the org.Hs.egSYMBOL2EG database.

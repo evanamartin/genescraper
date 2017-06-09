@@ -1,0 +1,34 @@
+#' Scrape IDs
+#'
+#' Mines article IDs from NCBI databases according to the seach criteria.
+#'
+#' @param dataBase A string. Indicates the database from which you want to search.
+#' @param  term A string. The terms used to search the specified database.
+#'
+#' @return A list containing all of the ids of the articles that matched the search criteria.
+#'
+#' @examples
+#' pmids2017 <- scrapeIDs (dataBase = 'pubmed',
+#'                         term = 'prostate cancer[MeSH] AND 2017[PDAT]')
+#'
+#' head(pmids2017)
+#'
+#' @export
+#'
+#' @importFrom rentrez entrez_search
+#'
+scrapeIDs <- function (dataBase = 'pubmed',
+                       term = 'prostate cancer[MeSH]') {
+
+  # Run an initial search to get the total number of articles that match the search criteria.
+  initialRun <- entrez_search (db = dataBase,
+                               term = term)
+
+  # Use the number of articles from the first search to get the pubmed ID for all of the articles
+  IDS <- entrez_search (db = dataBase,
+                        term = term,
+                        retmax = initialRun$count)
+
+  return (IDS$ids)
+
+}
