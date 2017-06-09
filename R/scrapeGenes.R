@@ -29,7 +29,6 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster
 #' @importFrom pubmed.mineR pubtator_function
-#' @importFrom stringr str_to_lower
 #'
 scrapeGenes <- function (IDs,
                           nCores,
@@ -95,7 +94,7 @@ scrapeGenes <- function (IDs,
   stopCluster(clusters)
 
   uniqueGenes <- genes %>%
-    lapply (str_to_lower) %>% # Convert all letters to lower case
+    lapply (tolower) %>% # Convert all letters to lower case
     lapply (unique) %>% # Keep only one mention of each gene from each article
     unlist () %>%
     as_tibble () %>%
