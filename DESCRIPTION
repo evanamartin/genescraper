@@ -9,7 +9,7 @@ Description: Mines genes mentioned in the abstracts from publications
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends:
+Imports:
   AnnotationDbi,
   doParallel,
   dplyr,
