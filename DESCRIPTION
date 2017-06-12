@@ -19,7 +19,6 @@ Depends:
   parallel,
   pubmed.mineR,
   rentrez,
-  stringr,
   tibble
 Suggests:
   knitr,
