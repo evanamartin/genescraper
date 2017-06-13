@@ -10,12 +10,12 @@ geneScrapeR is meant to make it easy to find the genes associated with a disease
 
 It is recommended that you install org.Hs.eg.db prior to installing geneScrapeR.
 To install org.Hs.eg.db
-```{r,eval = FALSE}
+```r
 source('http://bioconductor.org/biocLite.R')     
 biocLite('org.Hs.eg.db')
 ```
 Also, if you do not have a package that geneScrapeR depends on you may get an error as it installs. If that happens you will have to install that package separately before you can successfully install geneScrapeR.
 To install geneScrapeR
-```{r,eval = FALSE}
+```r
 devtools::install_github('Evatar/geneScrapeR')
 ```
