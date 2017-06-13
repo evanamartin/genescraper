@@ -28,9 +28,9 @@ pmids[1:10]
 The scrapeIDs returns a list of all of the IDs that match the serach criteria. These IDs can then be passed to the scrapeGenes function. Which accesses the NCBI website and extracts all of the genes associated with each article.
 
 ```{r}
-genes <- scrapeGenes (IDs = pmids,
+genes <- scrapeGenes (IDs = pmids[1:300],
                       nCores = 2,
-                      nArticles = 300)
+                      nTries = 5)
 
 genes
 ```

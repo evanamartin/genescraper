@@ -4,14 +4,14 @@
 \alias{scrapeGenes}
 \title{Scrape Genes}
 \usage{
-scrapeGenes(IDs, nCores, nArticles)
+scrapeGenes(IDs, nCores = 2, nTries = 5)
 }
 \arguments{
 \item{IDs}{A list of article IDs from the NCBI website.}
 
 \item{nCores}{An integer for the number of cores to use to mine the NCBI articles.}
 
-\item{nArticles}{An integer for the number of articles to be mined.}
+\item{nTries}{An integer for the number of times to attempt to connect to the NCBI website if it is unable to connect.}
 }
 \value{
 A tibble. The first column is the gene name and
@@ -26,6 +26,6 @@ pmids <- scrapeIDs (dataBase = 'pubmed',
 
 geneNames <- scrapeGenes (IDs = pmids,
                           nCores = 2,
-                          nArticles = length (pmids))
+                          nTries = 5)
 
 }

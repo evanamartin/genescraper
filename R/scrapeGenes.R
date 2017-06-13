@@ -4,7 +4,7 @@
 #'
 #' @param IDs A list of article IDs from the NCBI website.
 #' @param nCores An integer for the number of cores to use to mine the NCBI articles.
-#' @param nArticles An integer for the number of articles to be mined.
+#' @param nTries An integer for the number of times to attempt to connect to the NCBI website if it is unable to connect.
 #'
 #' @return A tibble. The first column is the gene name and
 #' the second column is the number of times that gene is mentioned.
@@ -15,7 +15,7 @@
 #'
 #' geneNames <- scrapeGenes (IDs = pmids,
 #'                           nCores = 2,
-#'                           nArticles = length (pmids))
+#'                           nTries = 5)
 #'
 #' @export
 #'
@@ -31,8 +31,8 @@
 #' @importFrom pubmed.mineR pubtator_function
 #'
 scrapeGenes <- function (IDs,
-                          nCores,
-                          nArticles) {
+                          nCores = 2,
+                          nTries = 5) {
 
   clusters <- makeCluster (nCores)
   registerDoParallel (clusters)
@@ -41,14 +41,14 @@ scrapeGenes <- function (IDs,
 
   # genes is a list to hold the names of the genes found in the abstract of each article that matched the search.
   # Loop through each article individually to extract the names of the genes in the abstarct.
-  genes <- foreach (i = 1:nArticles, .export = 'pubtator_function') %dopar% {
+  genes <- foreach (i = seq_along(IDs), .export = 'pubtator_function') %dopar% {
 
     # Use try() to return a try-error if the pubtator_function doesn't communicate with the pubmed website.
     pubtatorOutput <- try (pubtator_function (IDs[i]),
                            silent = TRUE)
 
     # Continue to try to retrive data from pubmed until it is successful.
-    counter_i <- 0
+    counter_i <- nTries
 
     while (inherits (pubtatorOutput,
                      'try-error') == TRUE) {
