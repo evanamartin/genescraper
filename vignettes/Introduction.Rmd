@@ -1,10 +1,10 @@
 ---
-title: "Introduction"
+title: "geneScrapeR"
 author: "Evan A Martin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{geneScrapeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
