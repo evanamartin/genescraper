@@ -1,6 +1,6 @@
 library (geneScrapeR)
 
-test_that ('A list is returned', {
+test_that ('extractGenes returns a list of the correct length', {
 
   pmids <- scrapeIDs (dataBase = 'pubmed',
                       term = 'maladaptive daydreaming[Title/Abstract]')
@@ -8,8 +8,12 @@ test_that ('A list is returned', {
   geneids <- extractGenes (IDs = pmids,
                            nCores = 2)
 
-  # Expect the new search will contain the same five articles in basepmids
+  # Check that the new search will contain the same five article ids that are in basepmids
   expect_that (str (geneids),
                prints_text ('List of'))
+
+  # Check that the list is the correct length
+  expect_that (length (pmids) == length (geneids),
+               is_true ())
 
 })
