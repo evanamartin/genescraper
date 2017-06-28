@@ -16,4 +16,9 @@ test_that ('extractGenes returns a list of the correct length', {
   expect_that (length (pmids) == length (geneids),
                is_true ())
 
+  # Check that NULL is returned when the article output doesn't have the correct form
+  expect_that (is.null (extractGenes (IDs = 20275638,
+                                      nCores = 1)[[1]]),
+               is_true())
+
 })
