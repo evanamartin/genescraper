@@ -2,10 +2,7 @@ context ('cleanGenes')
 
 test_that ('A tibble with two columns is returned', {
 
-  pmids <- scrapeIDs (dataBase = 'pubmed',
-                      term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
-
-  geneids <- extractGenes(IDs = pmids,
+  geneids <- extractGenes(IDs = 20810806,
                           nCores = 2)
 
   geneSymbols <- cleanGenes(geneids)
