@@ -1,4 +1,4 @@
-library (geneScrapeR)
+context ('scrapeIDs')
 
 test_that ('scrapeIDs returns the correct ids in the correct form', {
 
@@ -17,5 +17,3 @@ test_that ('scrapeIDs returns the correct ids in the correct form', {
                prints_text ('chr'))
 
 })
-
-

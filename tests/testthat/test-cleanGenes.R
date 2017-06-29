@@ -1,4 +1,4 @@
-library (geneScrapeR)
+context ('cleanGenes')
 
 test_that ('A tibble with two columns is returned', {
 
@@ -19,4 +19,3 @@ test_that ('A tibble with two columns is returned', {
                is_equivalent_to (2))
 
 })
-

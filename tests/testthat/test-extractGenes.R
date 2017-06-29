@@ -1,4 +1,4 @@
-library (geneScrapeR)
+context ('extractGenes')
 
 test_that ('extractGenes returns a list of the correct length', {
 

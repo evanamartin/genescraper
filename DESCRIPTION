@@ -21,10 +21,10 @@ Imports:
   stringr,
   tibble
 Suggests:
+  covr,
   knitr,
   rmarkdown,
   ggplot2,
-  testthat,
-    covr
+  testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
