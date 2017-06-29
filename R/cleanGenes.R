@@ -34,7 +34,9 @@ cleanGenes <- function (geneList) {
     unlist () %>%
     as_tibble () %>%
     dplyr::rename (geneSymbol = value) %>%
-    dplyr::count (geneSymbol)
+    dplyr::count (geneSymbol) %>%
+    dplyr::arrange (-n) %>%
+    dplyr::mutate (geneSymbol = factor (x = geneSymbol))
 
   return (geneTibble)
 
