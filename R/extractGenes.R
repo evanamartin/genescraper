@@ -4,6 +4,7 @@
 #'
 #' @param IDs A list of article IDs from the NCBI website.
 #' @param nCores An integer for the number of cores to use to mine the NCBI articles.
+#' @param nTries An integer for the number of times to attempt to connect to the NCBI website.
 #'
 #' @return A list. Each element in the list is also a list. It contains the
 #' entrez gene ids for all the genes found in each abstract.
@@ -13,7 +14,8 @@
 #'                     term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
 #'
 #' geneNames <- extractGenes (IDs = pmids,
-#'                            nCores = 2)
+#'                            nCores = 2,
+#'                            nTries = 5)
 #'
 #' @export
 #'
@@ -28,7 +30,8 @@
 #' @importFrom RCurl getURL
 #'
 extractGenes <- function (IDs,
-                         nCores = 2) {
+                         nCores = 2,
+                         nTries = 5) {
 
   clusters <- makeCluster (nCores)
   registerDoParallel (clusters)
@@ -41,7 +44,30 @@ extractGenes <- function (IDs,
                                 'str_c',
                                 'str_split')) %dopar% {
 
-                                  scrapePubTator(IDs[i])
+                                  # Use try() to return a try-error if the pubtator_function doesn't communicate with the pubmed website.
+                                  pubtatorOutput <- try (scrapePubTator (IDs[i]),
+                                                         silent = TRUE)
+
+                                  # Continue to try to retrive data from pubmed until it is successful.
+                                  counter_i <- nTries
+
+                                  while (inherits (pubtatorOutput,
+                                                   'try-error') == TRUE) {
+
+                                    pubtatorOutput <- try (scrapePubTator (IDs[i]),
+                                                           silent = TRUE)
+
+                                    counter_i <- counter_i + 1
+
+                                    if (counter_i > nTries) {
+
+                                      stop ('Unknown SSL protocol error in connection to www.ncbi.nlm.nih.gov:443')
+
+                                    }
+
+                                  }
+
+                                  pubtatorOutput
 
                                 }
 

@@ -4,12 +4,14 @@
 \alias{extractGenes}
 \title{Extract Genes}
 \usage{
-extractGenes(IDs, nCores = 2)
+extractGenes(IDs, nCores = 2, nTries = 5)
 }
 \arguments{
 \item{IDs}{A list of article IDs from the NCBI website.}
 
 \item{nCores}{An integer for the number of cores to use to mine the NCBI articles.}
+
+\item{nTries}{An integer for the number of times to attempt to connect to the NCBI website.}
 }
 \value{
 A list. Each element in the list is also a list. It contains the
@@ -23,6 +25,7 @@ pmids <- scrapeIDs (dataBase = 'pubmed',
                     term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
 
 geneNames <- extractGenes (IDs = pmids,
-                           nCores = 2)
+                           nCores = 2,
+                           nTries = 5)
 
 }
