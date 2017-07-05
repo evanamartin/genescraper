@@ -30,7 +30,7 @@ cleanGenes <- function (geneList) {
 
   geneTibble <- geneList %>%
     unlist () %>%
-    lapply (function (x) geneConversion[grep (str_c ('^', x, '$'), geneConversion[[2]]), 1]) %>%
+    lapply (function (x) geneConversion[grep (str_c ('^', x, '$'), geneConversion[[2]]), c(1, 3, 4)]) %>%
     unlist () %>%
     as_tibble () %>%
     dplyr::rename (geneSymbol = value) %>%
