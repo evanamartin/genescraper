@@ -20,7 +20,7 @@ counts the number of times each gene is mentioned.
 }
 \examples{
 pmids <- scrapeIDs (dataBase = 'pubmed',
-                    term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
+                    term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 
 geneids <- extractGenes (IDs = pmids,
                          nCores = 2)

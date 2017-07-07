@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' pmids <- scrapeIDs (dataBase = 'pubmed',
-#'                     term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
+#'                     term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 #'
 #' geneids <- extractGenes (IDs = pmids,
 #'                          nCores = 2)
@@ -22,34 +22,39 @@
 #'
 #' @import dplyr
 #' @import magrittr
+#' @import org.Hs.eg.db
 #' @import tibble
+#'
+#' @importFrom AnnotationDbi as.data.frame
 #'
 cleanGenes <- function (geneList) {
 
-  value <- geneSymbol <- NULL
+  value <- gene_symbol <- NULL
 
-  geneTibble <- geneList %>%
+  symbolDF <- AnnotationDbi::as.data.frame (org.Hs.egSYMBOL)
+  nameDF <- AnnotationDbi::as.data.frame (org.Hs.egGENENAME)
+  keyDF <- cbind (symbolDF, 'gene_name' = nameDF[, 2])
+
+  geneDF <- geneList %>%
     unlist () %>%
-    lapply (function (x) geneConversion[grep (str_c ('^', x, '$'), geneConversion[[2]]), 1]) %>%
+    lapply (function (x) keyDF[grep (str_c ('^', x, '$'), keyDF[, 1]), 2]) %>%
     unlist () %>%
     as_tibble () %>%
-    dplyr::rename (geneSymbol = value) %>%
-    dplyr::count (geneSymbol) %>%
+    dplyr::rename (gene_symbol = value) %>%
+    dplyr::count (gene_symbol) %>%
     dplyr::arrange (-n) %>%
-    dplyr::mutate (geneSymbol = factor (x = geneSymbol))
+    dplyr::mutate (gene_symbol = factor (x = gene_symbol))
 
-  geneTibble[, 3:4] <- NA
+  geneDF[, 3:4] <- NA
 
-  geneTibble <- as.data.frame (geneTibble)
+  for (v in 1:length (geneDF[[1]])) {
 
-  for (v in 1:length (geneTibble[[1]])) {
-
-    geneTibble[v, 3:4] <- geneConversion[grep (str_c ('^', as.character (geneTibble[v, 1]), '$'), geneConversion[[1]]), 3:4]
+    geneIDX <- grep (str_c ('^', geneDF[[1]][v], '$'), keyDF[, 2])
+    geneDF[v, 3] <- as.character (keyDF[geneIDX, 3])
+    geneDF[v, 4] <- tissueDF[geneIDX, 2]
 
   }
 
-  # geneTibble <- as_tibble (geneTibble)
-
-  return (geneTibble)
+  return (geneDF)
 
 }

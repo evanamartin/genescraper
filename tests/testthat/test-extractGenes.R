@@ -3,7 +3,8 @@ context ('extractGenes')
 test_that ('extractGenes returns a list of the correct length', {
 
   geneids <- extractGenes (IDs = c(28614680, 28614679, 28538811, 28443495, 28433972),
-                           nCores = 2)
+                           nCores = 2,
+                           nTries = 5)
 
   # Check that the new search will contain the same five article ids that are in basepmids
   expect_that (str (geneids),

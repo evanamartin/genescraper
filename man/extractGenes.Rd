@@ -22,7 +22,7 @@ Extracts the gene ids from the information scraped from the PubTator website.
 }
 \examples{
 pmids <- scrapeIDs (dataBase = 'pubmed',
-                    term = '(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])')
+                    term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 
 geneNames <- extractGenes (IDs = pmids,
                            nCores = 2,

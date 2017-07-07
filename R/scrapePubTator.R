@@ -37,7 +37,7 @@ scrapePubTator <- function (IDs) {
 
     }
 
-    uniqueGenes <- unique (PTGenes)
+    uniqueGenes <- base::unique (PTGenes)
 
   } else {
 

@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' pmids2017 <- scrapeIDs (dataBase = 'pubmed',
-#'                         term = 'prostate cancer[MeSH] AND 2017[PDAT]')
+#'                         term = '(prostate cancer[MeSH Terms]) AND 2017[Date - Publication]')
 #'
 #' head(pmids2017)
 #'

@@ -3,7 +3,8 @@ context ('cleanGenes')
 test_that ('A tibble with two columns is returned', {
 
   geneids <- extractGenes(IDs = 20810806,
-                          nCores = 2)
+                          nCores = 2,
+                          nTries = 5)
 
   geneSymbols <- cleanGenes(geneids)
 
@@ -13,6 +14,6 @@ test_that ('A tibble with two columns is returned', {
 
   # Check that the tibble has the correct number of columns
   expect_that (dim (geneSymbols)[2],
-               is_equivalent_to (2))
+               is_equivalent_to (4))
 
 })

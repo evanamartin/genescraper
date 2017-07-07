@@ -22,7 +22,7 @@ This function may take a very long time to run. The runtime for searching one ab
 
 ```{r}
 pmids <- scrapeIDs (dataBase = 'pubmed',
-                    term = 'prostate cancer[MeSH])')
+                    term = 'prostate cancer[MeSH Terms])')
 
 pmids[1:10]
 ```
@@ -31,7 +31,8 @@ The scrapeIDs returns a list of all of the IDs that match the serach criteria. T
 
 ```{r,comment=''}
 genes <- extractGenes (IDs = pmids[1:100],
-                       nCores = 2)
+                       nCores = 2,
+                       nTries = 5)
 
 genes[1:5]
 
@@ -48,11 +49,8 @@ library (magrittr)
 library (dplyr)
 
 geneSymbols %>%
-  arrange (-n) %>%
-  head (25) %>%
-  mutate (geneSymbol = factor (geneSymbol, geneSymbol)) %>%
   ggplot () +
-  geom_bar (mapping = aes (x = geneSymbol, y = n),
+  geom_bar (mapping = aes (x = gene_symbol, y = n),
             stat = 'identity',
             width = 0.5) +
   xlab ('Gene') +
