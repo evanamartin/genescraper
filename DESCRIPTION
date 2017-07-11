@@ -18,6 +18,7 @@ Imports:
   magrittr,
   org.Hs.eg.db,
   parallel,
+  purrr,
   RCurl,
   rentrez,
   stringr,

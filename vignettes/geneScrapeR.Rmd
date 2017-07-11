@@ -50,7 +50,7 @@ library (dplyr)
 
 geneSymbols %>%
   ggplot () +
-  geom_bar (mapping = aes (x = gene_symbol, y = n),
+  geom_bar (mapping = aes (x = geneSymbol, y = n),
             stat = 'identity',
             width = 0.5) +
   xlab ('Gene') +
