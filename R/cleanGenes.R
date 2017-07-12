@@ -34,15 +34,17 @@ cleanGenes <- function (geneList) {
 
   symbolDF <- AnnotationDbi::as.data.frame (org.Hs.egSYMBOL)
   nameDF <- AnnotationDbi::as.data.frame (org.Hs.egGENENAME)
-  keyDF <- cbind (symbolDF, 'gene_name' = nameDF[, 2])
+  keyDF <- cbind (symbolDF, 'geneName' = nameDF[, 2])
 
+  # By unlisting geneList all of the NULL elements are removed
   geneList <- unlist(geneList)
 
-  # Return FALSE for the genes that aren't human
+  # Return FALSE for the genes that aren't human because only human genes
+  # are listed in the keyDF data frame
   isHuman <- geneList %>%
-    unlist () %>%
-    map_lgl (~isTRUE(grep (str_c ('^', ., '$'), keyDF[, 1]) >= 1))
+    map_lgl (~isTRUE (grep (str_c ('^', ., '$'), keyDF[, 1]) >= 1))
 
+  # Only keep the gene ids that are associated with human genes
   humanIDs <- geneList[c (isHuman)]
 
   geneDF <- humanIDs %>%
@@ -53,9 +55,12 @@ cleanGenes <- function (geneList) {
     dplyr::arrange (-n) %>%
     dplyr::mutate (geneSymbol = factor (x = geneSymbol))
 
-  geneIDX <- map_int (geneDF[[1]], ~grep (str_c ('^', geneDF[[1]][.], '$'), keyDF[, 2]))
+  # Take only the first element returned because of duplicate gene symbols
+  # in the org.Hs.egSYMBOL data base.
+  geneIDX <- geneDF[[1]] %>%
+    map_int (~grep (str_c ('^', ., '$'), keyDF[, 2])[[1]])
   geneDF[, 3] <- as.character (keyDF[geneIDX, 3])
-  geneDF[, 4] <- as.character(tissueDF[geneIDX, 2])
+  geneDF[, 4] <- as.character (tissueDF[geneIDX, 2])
 
   names(geneDF) <- c('geneSymbol', 'n', 'geneName', 'tissue')
 
