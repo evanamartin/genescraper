@@ -4,7 +4,5 @@ language: r
 r: bioc-devel
 sudo: false
 cache: packages
-install:
-- R -e 'devtools::install_deps(dep = T)'
 after_success:
   - Rscript -e 'covr::codecov()'
