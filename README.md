@@ -10,6 +10,14 @@ geneScrapeR is meant to make it easy to extract the genes mentioned in articles 
 
 ### Installation
 
+It is recommended that you install org.Hs.eg.db and org.Mm.eg.db prior to installing geneScrapeR.
+To install them run
+```r
+source('http://bioconductor.org/biocLite.R')
+biocLite('org.Hs.eg.db')
+biocLite('org.Mm.eg.db')
+```
+
 If you do not have a package that geneScrapeR depends on you may get an error as geneScrapeR installs. Before being able to successfully install geneScrapeR you will have to install the missing package separately. After installing all of the packages that geneScrapeR depends on you will be able to successfully install geneScrapeR.
 
 To install geneScrapeR
