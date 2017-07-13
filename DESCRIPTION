@@ -17,6 +17,7 @@ Imports:
   foreach,
   magrittr,
   org.Hs.eg.db,
+  org.Mm.eg.db,
   parallel,
   purrr,
   RCurl,

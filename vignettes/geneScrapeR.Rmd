@@ -34,7 +34,7 @@ genes <- extractGenes (IDs = pmids[1:100],
                        nCores = 2,
                        nTries = 5)
 
-genes[1:5]
+unlist (genes[1:10])
 
 geneSymbols <- cleanGenes (geneList = genes)
 
@@ -48,9 +48,9 @@ library (ggplot2)
 library (magrittr)
 library (dplyr)
 
-geneSymbols %>%
+geneSymbols$human[1:15, ] %>%
   ggplot () +
-  geom_bar (mapping = aes (x = geneSymbol, y = n),
+  geom_bar (mapping = aes (x = reorder(geneSymbol, -n), y = n),
             stat = 'identity',
             width = 0.5) +
   xlab ('Gene') +
