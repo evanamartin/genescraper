@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Evatar/geneScrapeR.svg?branch=master)](https://travis-ci.org/Evatar/geneScrapeR) [![Coverage Status](https://img.shields.io/codecov/c/github/Evatar/geneScrapeR/master.svg?precision=1)](https://codecov.io/github/Evatar/geneScrapeR?branch=master)
+
 # geneScrapeR
 
 geneScrapeR is an R package that mines NCBI databases for genes mentioned in connection with diseases and other medical conditions. It counts the number of articles that mention each gene cited and returns them in a data frame. 
