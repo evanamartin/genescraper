@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Evatar/geneScrapeR.svg?branch=master)](https://travis-ci.org/Evatar/geneScrapeR) [![Coverage Status](https://img.shields.io/codecov/c/github/Evatar/geneScrapeR/master.svg?precision=1)](https://codecov.io/github/Evatar/geneScrapeR?branch=master)
+
 # geneScrapeR
 
 geneScrapeR is an R package that mines NCBI databases for genes mentioned in connection with diseases and other medical conditions. It counts the number of articles that mention each gene cited and returns them in a data frame. 
@@ -7,6 +9,14 @@ geneScrapeR is an R package that mines NCBI databases for genes mentioned in con
 geneScrapeR is meant to make it easy to extract the genes mentioned in articles available in NCBI databases. It returns them in a format that is easy to use and read.
 
 ### Installation
+
+It is recommended that you install org.Hs.eg.db and org.Mm.eg.db prior to installing geneScrapeR.
+To install them run
+```r
+source('http://bioconductor.org/biocLite.R')
+biocLite('org.Hs.eg.db')
+biocLite('org.Mm.eg.db')
+```
 
 If you do not have a package that geneScrapeR depends on you may get an error as geneScrapeR installs. Before being able to successfully install geneScrapeR you will have to install the missing package separately. After installing all of the packages that geneScrapeR depends on you will be able to successfully install geneScrapeR.
 
