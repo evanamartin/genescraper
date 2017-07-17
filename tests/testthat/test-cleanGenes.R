@@ -18,10 +18,10 @@ test_that ('A tibble with two columns is returned', {
 
   # Check that the human tibble has the correct number of columns
   expect_that (dim (geneSymbols$human)[2],
-               is_equivalent_to (4))
+               is_equivalent_to (5))
 
   # Check that the mouse tibble has the correct number of columns
   expect_that (dim (geneSymbols$mouse)[2],
-               is_equivalent_to (3))
+               is_equivalent_to (4))
 
 })
