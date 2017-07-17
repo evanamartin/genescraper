@@ -31,7 +31,7 @@
 #'
 cleanGenes <- function (geneList) {
 
-  value <- geneSymbol <- NULL
+  value <- geneID <- NULL
 
   # Get gene symbols and names from org.Hs.eg.db
   symbolHsDF <- AnnotationDbi::as.data.frame (org.Hs.egSYMBOL)
@@ -51,45 +51,53 @@ cleanGenes <- function (geneList) {
   isHuman <- geneList %>%
     map_lgl (~isTRUE (grep (str_c ('^', ., '$'), keyHsDF[, 1]) >= 1))
 
-  isMouse <- geneList %>%
+  # Search only the genes that returned FALSE in isHuman
+  isMouse <- geneList[!isHuman] %>%
     map_lgl (~isTRUE (grep (str_c ('^', ., '$'), keyMmDF[, 1]) >= 1))
 
   # Separate human and mouse genes to report them in different tibbles
   humanIDs <- geneList[c (isHuman)]
-  mouseIDs <- geneList[c (isMouse)]
+  # The indices when isMouse is TRUE won't match where they actually occur in geneList
+  # because isMouse only searched the FALSE fields in isHuman. To get the IDs that are
+  # potentially mouse IDs first filter geneList when isHuman is FALSE then filter these
+  # indices when isMouse is TRUE
+  mouseIDs <- geneList[c (!isHuman)]
+  mouseIDs <- mouseIDs[c (isMouse)]
 
   # Get the counts of the human genes and order them by count
   geneHsDF <- humanIDs %>%
-    map_chr (~keyHsDF[grep (str_c ('^', ., '$'), keyHsDF[, 1]), 2]) %>%
+    map_chr (~keyHsDF[grep (str_c ('^', ., '$'), keyHsDF[, 1]), 1]) %>%
     as_tibble () %>%
-    dplyr::rename (geneSymbol = value) %>%
-    dplyr::count (geneSymbol) %>%
+    dplyr::rename (geneID = value) %>%
+    dplyr::count (geneID) %>%
     dplyr::arrange (-n) %>%
-    dplyr::mutate (geneSymbol = factor (x = geneSymbol))
+    dplyr::mutate (geneID = factor (x = geneID))
 
   # Take only the first element returned because of duplicate gene symbols
   # in the org.Hs.egSYMBOL data base.
   geneIDX <- geneHsDF[[1]] %>%
-    map_int (~grep (str_c ('^', ., '$'), keyHsDF[, 2])[[1]])
-  geneHsDF[, 3] <- as.character (keyHsDF[geneIDX, 3])
-  geneHsDF[, 4] <- as.character (tissueDF[geneIDX, 2])
+    map_int (~grep (str_c ('^', ., '$'), keyHsDF[, 1]))
+  geneHsDF[, 3] <- as.character (keyHsDF[geneIDX, 2])
+  geneHsDF[, 4] <- as.character (keyHsDF[geneIDX, 3])
+  geneHsDF[, 5] <- as.character (tissueDF[geneIDX, 2])
 
-  names (geneHsDF) <- c ('geneSymbol', 'n', 'geneName', 'tissue')
+  names (geneHsDF) <- c ('geneID', 'n', 'geneSymbol', 'geneName', 'tissue')
 
   # Get the counts of the mouse genes and order them by count
   geneMmDF <- mouseIDs %>%
-    map_chr (~keyMmDF[grep (str_c ('^', ., '$'), keyMmDF[, 1]), 2]) %>%
+    map_chr (~keyMmDF[grep (str_c ('^', ., '$'), keyMmDF[, 1]), 1]) %>%
     as_tibble () %>%
-    dplyr::rename (geneSymbol = value) %>%
-    dplyr::count (geneSymbol) %>%
+    dplyr::rename (geneID = value) %>%
+    dplyr::count (geneID) %>%
     dplyr::arrange (-n) %>%
-    dplyr::mutate (geneSymbol = factor (x = geneSymbol))
+    dplyr::mutate (geneID = factor (x = geneID))
 
   geneMmIDX <- geneMmDF[[1]] %>%
-    map_int (~grep (str_c ('^', ., '$'), keyMmDF[, 2])[[1]])
-  geneMmDF[, 3] <- as.character (keyMmDF[geneMmIDX, 3])
+    map_int (~grep (str_c ('^', ., '$'), keyMmDF[, 1]))
+  geneMmDF[, 3] <- as.character (keyMmDF[geneMmIDX, 2])
+  geneMmDF[, 4] <- as.character (keyMmDF[geneMmIDX, 3])
 
-  names (geneMmDF) <- c ('geneSymbol', 'n', 'geneName')
+  names (geneMmDF) <- c ('geneID', 'n', 'geneSymbol', 'geneName')
 
   return (list (human = geneHsDF, mouse = geneMmDF))
 
