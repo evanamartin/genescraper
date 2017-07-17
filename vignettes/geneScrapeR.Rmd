@@ -41,7 +41,7 @@ geneSymbols <- cleanGenes (geneList = genes)
 geneSymbols
 ```
 
-Using ggplot2 we can look at which genes are most commonly mentioned in connection with prostate cancer. To make the plot more readable we will only look at the top 25.
+Using ggplot2 we can look at which genes are most commonly mentioned in connection with prostate cancer. To make the plot more readable we will only look at the top 15.
 
 ```{r,message=FALSE}
 library (ggplot2)

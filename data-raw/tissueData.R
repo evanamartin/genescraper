@@ -9,6 +9,10 @@ library (org.Hs.eg.db)
 symbolDF <- as.data.frame (org.Hs.egSYMBOL)
 
 
+### When the normal_tissue.csv file is downloaded from the Human Protein Atlas
+### website the first and the last columns must be deleted before running the
+### rest of this R script. These columns were deleted before putting the file on
+### GitHub to make it smaller than 50 mb.
 # read in the csv that contains the tissues that each gene is expressed in
 tissues <- read_csv (file = '~/normal_tissue.csv')
 
@@ -24,7 +28,7 @@ for (e in 1:length (symbolDF[, 1])) {
 
   # Get the index of the rows in symbolDF that match each gene in symbolDF
   # and combine the tissue/cell type column into one row
-  geneIDX <- grep (str_c ('^', symbolDF[e, 2], '$', sep = ''), tissues[[2]])
+  geneIDX <- grep (str_c ('^', symbolDF[e, 2], '$', sep = ''), tissues[[1]])
 
   if (length(geneIDX) != 0) {
 
@@ -33,8 +37,8 @@ for (e in 1:length (symbolDF[, 1])) {
     # condense the list of tissues to one string
     for (v in 1:length (geneIDX)) {
 
-      temp <- tissues[geneIDX[v], 3]
-      temp2 <- str_c(temp2, temp, sep = '; ')
+      temp <- tissues[geneIDX[v], 2]
+      temp2 <- str_c(temp2, temp, sep = '; ', collapse = '')
 
     }
 
