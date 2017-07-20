@@ -1,25 +1,25 @@
 scrapePubTator <- function (IDs) {
 
-  rawPTOutput <- getURL (str_c ('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
-                                IDs,
-                                '/PubTator'))
+  rawPTOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
+                              IDs,
+                              '/PubTator'))
 
-  listPTOutput <- unlist (str_split (rawPTOutput,
-                                     '\n'))
+  listPTOutput <- unlist(str_split(rawPTOutput,
+                                   '\n'))
 
   PTMatrix <- NULL
 
-  for (e in 3:length (listPTOutput)) {
+  for (e in 3:length(listPTOutput)) {
 
-    PTElements <- unlist (str_split (listPTOutput[e], '\t'))
+    PTElements <- unlist(str_split(listPTOutput[e], '\t'))
 
-    if (length (PTElements) == 5) {
+    if (length(PTElements) == 5) {
 
       PTElements <- c(PTElements, '-')
 
     }
 
-    PTMatrix <- rbind (PTMatrix, PTElements)
+    PTMatrix <- rbind(PTMatrix, PTElements)
 
   }
 
@@ -31,13 +31,13 @@ scrapePubTator <- function (IDs) {
 
       if (PTMatrix[v, 5] == 'Gene') {
 
-        PTGenes <- c (PTGenes, PTMatrix[v, 6])
+        PTGenes <- c(PTGenes, PTMatrix[v, 6])
 
       }
 
     }
 
-    uniqueGenes <- base::unique (PTGenes)
+    uniqueGenes <- base::unique(PTGenes)
 
   } else {
 
@@ -45,7 +45,7 @@ scrapePubTator <- function (IDs) {
 
   }
 
-  return (list (uniqueGenes))
+  return (list(uniqueGenes))
 
 }
 

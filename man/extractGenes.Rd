@@ -21,11 +21,11 @@ entrez gene ids for all the genes found in each abstract.
 Extracts the gene ids from the information scraped from the PubTator website.
 }
 \examples{
-pmids <- scrapeIDs (dataBase = 'pubmed',
-                    term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
+pmids <- scrapeIDs(dataBase = 'pubmed',
+                   term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 
-geneNames <- extractGenes (IDs = pmids,
-                           nCores = 2,
-                           nTries = 5)
+geneNames <- extractGenes(IDs = pmids,
+                          nCores = 2,
+                          nTries = 5)
 
 }

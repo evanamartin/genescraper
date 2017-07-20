@@ -19,12 +19,12 @@ Converts the entrez gene ids into the approved gene symbol and
 counts the number of times each gene is mentioned.
 }
 \examples{
-pmids <- scrapeIDs (dataBase = 'pubmed',
-                    term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
+pmids <- scrapeIDs(dataBase = 'pubmed',
+                   term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 
-geneids <- extractGenes (IDs = pmids,
-                         nCores = 2)
+geneids <- extractGenes(IDs = pmids,
+                        nCores = 2)
 
-geneNames <- cleanGenes (geneList = geneids)
+geneNames <- cleanGenes(geneList = geneids)
 
 }

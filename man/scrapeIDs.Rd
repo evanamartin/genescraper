@@ -18,8 +18,8 @@ A list containing all of the ids of the articles that matched the search criteri
 Mines article IDs from NCBI databases according to the seach criteria.
 }
 \examples{
-pmids2017 <- scrapeIDs (dataBase = 'pubmed',
-                        term = '(prostate cancer[MeSH Terms]) AND 2017[Date - Publication]')
+pmids2017 <- scrapeIDs(dataBase = 'pubmed',
+                       term = '(prostate cancer[MeSH Terms]) AND 2017[Date - Publication]')
 
 head(pmids2017)
 

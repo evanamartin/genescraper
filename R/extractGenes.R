@@ -10,12 +10,12 @@
 #' entrez gene ids for all the genes found in each abstract.
 #'
 #' @examples
-#' pmids <- scrapeIDs (dataBase = 'pubmed',
-#'                     term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
+#' pmids <- scrapeIDs(dataBase = 'pubmed',
+#'                    term = '(vivax malaria[MeSH Terms]) AND (folic acid antagonists[MeSH Terms])')
 #'
-#' geneNames <- extractGenes (IDs = pmids,
-#'                            nCores = 2,
-#'                            nTries = 5)
+#' geneNames <- extractGenes(IDs = pmids,
+#'                           nCores = 2,
+#'                           nTries = 5)
 #'
 #' @export
 #'
@@ -33,28 +33,28 @@ extractGenes <- function (IDs,
                          nCores = 2,
                          nTries = 5) {
 
-  clusters <- makeCluster (nCores)
-  registerDoParallel (clusters)
+  clusters <- makeCluster(nCores)
+  registerDoParallel(clusters)
 
   i <- value <- geneNames <- NULL
 
-  genes <- foreach (i = seq_along(IDs),
-                    .export = c('getURL',
-                                'scrapePubTator',
-                                'str_c',
-                                'str_split')) %dopar% {
+  genes <- foreach(i = seq_along(IDs),
+                   .export = c('getURL',
+                               'scrapePubTator',
+                               'str_c',
+                               'str_split')) %dopar% {
 
                                   # Use try() to return a try-error if the pubtator_function doesn't communicate with the pubmed website.
-                                  pubtatorOutput <- try (scrapePubTator (IDs[i]),
+                                  pubtatorOutput <- try (scrapePubTator(IDs[i]),
                                                          silent = TRUE)
 
                                   # Continue to try to retrive data from pubmed until it is successful.
                                   counter_i <- nTries
 
-                                  while (inherits (pubtatorOutput,
-                                                   'try-error') == TRUE) {
+                                  while (inherits(pubtatorOutput,
+                                                  'try-error') == TRUE) {
 
-                                    pubtatorOutput <- try (scrapePubTator (IDs[i]),
+                                    pubtatorOutput <- try (scrapePubTator(IDs[i]),
                                                            silent = TRUE)
 
                                     counter_i <- counter_i + 1
