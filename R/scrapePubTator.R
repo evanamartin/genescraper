@@ -1,51 +1,32 @@
 scrapePubTator <- function (IDs) {
 
-  rawPTOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
-                              IDs,
-                              '/PubTator'))
+  # Get the text from the PubTator website for the specified NCBI article id
+  rawOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
+                            IDs,
+                            '/PubTator'))
 
-  listPTOutput <- unlist(str_split(rawPTOutput,
-                                   '\n'))
+  # Create a list of elements from the PubTator website (title, abstract, ...)
+  listOutput <- rawOutput %>%
+    str_split('\n') %>%
+    unlist() %>%
+    map(~str_split(., '\t'))
 
-  PTMatrix <- NULL
+  # If the following for loop doesn't see any genes return null
+  genes <- NULL
 
-  for (e in 3:length(listPTOutput)) {
+  # Loop through each element of listOutput and extract the gene id
+  # if there is a gene present
+  for (e in seq_along(listOutput)) {
 
-    PTElements <- unlist(str_split(listPTOutput[e], '\t'))
+    if (length(listOutput[[e]][[1]]) == 6 && listOutput[[e]][[1]][5] == 'Gene') {
 
-    if (length(PTElements) == 5) {
-
-      PTElements <- c(PTElements, '-')
-
-    }
-
-    PTMatrix <- rbind(PTMatrix, PTElements)
-
-  }
-
-  if (ncol(PTMatrix) == 6) {
-
-    PTGenes <- NULL
-
-    for (v in 1:length(PTMatrix[, 1])) {
-
-      if (PTMatrix[v, 5] == 'Gene') {
-
-        PTGenes <- c(PTGenes, PTMatrix[v, 6])
-
-      }
+      temp <- listOutput[[e]][[1]][6]
+      genes <- c(genes, temp)
 
     }
 
-    uniqueGenes <- base::unique(PTGenes)
-
-  } else {
-
-    return (NULL)
-
   }
 
-  return (list(uniqueGenes))
+  return (unique(genes))
 
 }
-

@@ -20,11 +20,13 @@
 scrapeIDs <- function (dataBase = 'pubmed',
                        term = 'prostate cancer[MeSH]') {
 
-  # Run an initial search to get the total number of articles that match the search criteria.
+  # Run an initial search to get the total number of articles that match
+  # the search criteria.
   initialRun <- entrez_search(db = dataBase,
                               term = term)
 
-  # Use the number of articles from the first search to get the pubmed ID for all of the articles
+  # Use the number of articles from the first search to return the PubMed id
+  # for all of the articles that match the search criteria.
   IDS <- entrez_search(db = dataBase,
                        term = term,
                        retmax = initialRun$count)

@@ -7,7 +7,7 @@
 cleanGenes(geneList)
 }
 \arguments{
-\item{geneList}{A list containing the entrez gene IDs for all of the
+\item{geneList}{A list containing the Entrez gene ids for all of the
 genes found in each article.}
 }
 \value{

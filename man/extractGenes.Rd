@@ -7,7 +7,7 @@
 extractGenes(IDs, nCores = 2, nTries = 5)
 }
 \arguments{
-\item{IDs}{A list of article IDs from the NCBI website.}
+\item{IDs}{A list of article ids from the NCBI website.}
 
 \item{nCores}{An integer for the number of cores to use to mine the NCBI articles.}
 

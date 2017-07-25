@@ -2,7 +2,7 @@
 #'
 #' Extracts the gene ids from the information scraped from the PubTator website.
 #'
-#' @param IDs A list of article IDs from the NCBI website.
+#' @param IDs A list of article ids from the NCBI website.
 #' @param nCores An integer for the number of cores to use to mine the NCBI articles.
 #' @param nTries An integer for the number of times to attempt to connect to the NCBI website.
 #'
@@ -36,41 +36,48 @@ extractGenes <- function (IDs,
   clusters <- makeCluster(nCores)
   registerDoParallel(clusters)
 
+  # A warning is thrown when checking the package if the following values are
+  # not set to NULL before they are created.
   i <- value <- geneNames <- NULL
 
   genes <- foreach(i = seq_along(IDs),
                    .export = c('getURL',
+                               'map',
                                'scrapePubTator',
+                               'seq_along',
                                'str_c',
                                'str_split')) %dopar% {
 
-                                  # Use try() to return a try-error if the pubtator_function doesn't communicate with the pubmed website.
-                                  pubtatorOutput <- try (scrapePubTator(IDs[i]),
-                                                         silent = TRUE)
+                                 # The NCBI website will occasionally throw
+                                 # an error when the scrapePubTator function
+                                 # tries to extract information from it.
+                                 pubtatorOutput <- try (scrapePubTator(IDs[i]),
+                                                        silent = TRUE)
 
-                                  # Continue to try to retrive data from pubmed until it is successful.
-                                  counter_i <- nTries
+                                 # Continue to try to scrape data from NCBI
+                                 counter_i <- nTries
+                                 while (inherits(pubtatorOutput,
+                                                 'try-error') == TRUE) {
 
-                                  while (inherits(pubtatorOutput,
-                                                  'try-error') == TRUE) {
+                                   pubtatorOutput <- try (scrapePubTator(IDs[i]),
+                                                          silent = TRUE)
 
-                                    pubtatorOutput <- try (scrapePubTator(IDs[i]),
-                                                           silent = TRUE)
+                                   counter_i <- counter_i + 1
 
-                                    counter_i <- counter_i + 1
+                                   if (counter_i > nTries) {
 
-                                    if (counter_i > nTries) {
+                                     stop ('Unknown SSL protocol error in connection to www.ncbi.nlm.nih.gov:443')
 
-                                      stop ('Unknown SSL protocol error in connection to www.ncbi.nlm.nih.gov:443')
+                                   }
 
-                                    }
+                                 }
 
-                                  }
+                                 pubtatorOutput
 
-                                  pubtatorOutput
+                               }
 
-                                }
-
+  # All sorts of things go terribly wrong when checking the package and
+  # creating the vignettes if stopCluster isn't used at the end of the function.
   stopCluster(clusters)
 
   return (genes)

@@ -3,7 +3,7 @@
 #' Converts the entrez gene ids into the approved gene symbol and
 #' counts the number of times each gene is mentioned.
 #'
-#' @param geneList A list containing the entrez gene IDs for all of the
+#' @param geneList A list containing the Entrez gene ids for all of the
 #' genes found in each article.
 #'
 #' @return A tibble. The first column is the gene name and
@@ -27,20 +27,24 @@
 #' @import tibble
 #'
 #' @importFrom AnnotationDbi as.data.frame
-#' @importFrom purrr map_chr map_int map_lgl
+#' @importFrom purrr map map_chr map_int map_lgl
 #'
 cleanGenes <- function (geneList) {
 
+  # If value and geneID aren't set to NULL a warning is returned
+  # when building the package
   value <- geneID <- NULL
 
-  # Get gene symbols and names from org.Hs.eg.db
+  # Get current human gene symbols and names from org.Hs.eg.db to match
+  # the entrez gene id to the gene symbol and name
   symbolHsDF <- AnnotationDbi::as.data.frame(org.Hs.egSYMBOL)
   nameHsDF <- AnnotationDbi::as.data.frame(org.Hs.egGENENAME)
   keyHsDF <- tibble('geneID' = symbolHsDF[, 1],
                     'geneSymbol' = symbolHsDF[, 2],
                     'geneName' = nameHsDF[, 2])
 
-  # Get gene symbols and names from org.Mm.eg.db
+  # Get current mouse gene symbols and names from org.Mm.eg.db to match
+  # the entrez gene id to the gene symbol and name
   symbolMmDF <- AnnotationDbi::as.data.frame(org.Mm.egSYMBOL)
   nameMmDF <- AnnotationDbi::as.data.frame(org.Mm.egGENENAME)
   keyMmDF <- tibble('geneID' = symbolMmDF[, 1],
@@ -50,46 +54,51 @@ cleanGenes <- function (geneList) {
   # By unlisting geneList all of the NULL elements are removed
   geneList <- unlist(geneList)
 
-  # Return FALSE for the genes that aren't human because only human genes
-  # are listed in the keyDF data frame
+  # Separete human gene ids from all other gene ids
   isHuman <- geneList %>%
     map_lgl(~isTRUE(grep(str_c('^', ., '$'), keyHsDF[[1]]) >= 1))
 
-  # Search only the genes that returned FALSE in isHuman
+  # Select mouse gene ids from the ids that returned FALSE in isHuman
   isMouse <- geneList[!isHuman] %>%
     map_lgl(~isTRUE(grep(str_c('^', ., '$'), keyMmDF[[1]]) >= 1))
 
-  # Separate human and mouse genes to report them in different tibbles
+  # Separate human and mouse gene ids to report them in different tibbles
   humanIDs <- geneList[c(isHuman)]
-  # The indices when isMouse is TRUE won't match where they actually occur in geneList
-  # because isMouse only searched the FALSE fields in isHuman. To get the IDs that are
-  # potentially mouse IDs first filter geneList when isHuman is FALSE then filter these
-  # indices when isMouse is TRUE
+
+  # To get the mouse gene ids from geneList first filter geneList when isHuman
+  # is FALSE because isMouse is not the same length as geneList. Then filter
+  # these indices when isMouse is TRUE.
   mouseIDs <- geneList[c(!isHuman)]
   mouseIDs <- mouseIDs[c(isMouse)]
 
-  # Get the counts of the human genes and order them by count
+  # Get the counts of each human gene id and order them in
+  # descending order by count
   geneHsDF <- humanIDs %>%
     as_tibble() %>%
     dplyr::rename(geneID = value) %>%
     dplyr::count(geneID) %>%
     dplyr::arrange(dplyr::desc(n))
 
-  # Take only the first element returned because of duplicate gene symbols
-  # in the org.Hs.egSYMBOL data base.
+  # Match each human gene id with its symbol, name, and tissue it is expressed in.
+  # Take only the first element returned by grep because of potential duplicate
+  # gene symbols in the org.Hs.egSYMBOL data base.
   geneIDX <- geneHsDF[[1]] %>%
     map_int(~grep(str_c('^', ., '$'), keyHsDF[[1]]))
   geneHsDF[, 3] <- keyHsDF[geneIDX, 2]
   geneHsDF[, 4] <- keyHsDF[geneIDX, 3]
   geneHsDF[, 5] <- tissueDF[geneIDX, 2]
 
-  # Get the counts of the mouse genes and order them by count
+  # Get the counts of mouse gene ids and place them in descending order
   geneMmDF <- mouseIDs %>%
     as_tibble() %>%
     dplyr::rename(geneID = value) %>%
     dplyr::count(geneID) %>%
     dplyr::arrange(dplyr::desc(n))
 
+  # Match each mouse gene id with its symbol and name.
+  # Tissues will be added in the future.
+  # Take only the first element returned by grep because of  potential
+  # duplicate gene symbols in the org.Mm.egSYMBOL data base.
   geneMmIDX <- geneMmDF[[1]] %>%
     map_int(~grep(str_c('^', ., '$'), keyMmDF[[1]]))
   geneMmDF[, 3] <- keyMmDF[geneMmIDX, 2]
