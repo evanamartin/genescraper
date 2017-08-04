@@ -1,4 +1,4 @@
-Package: geneScrapeR
+Package: genescraper
 Type: Package
 Title: Scrape NCBI databases
 Version: 0.1.0

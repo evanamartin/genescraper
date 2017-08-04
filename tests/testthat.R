@@ -1,6 +1,6 @@
 Sys.setenv("R_TESTS" = "")
 
 library(testthat)
-library(geneScrapeR)
+library(genescraper)
 
-test_check("geneScrapeR")
+test_check("genescraper")
