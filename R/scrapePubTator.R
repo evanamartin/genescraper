@@ -1,9 +1,10 @@
 scrapePubTator <- function (IDs) {
 
   # Get the text from the PubTator website for the specified NCBI article id
-  rawOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
-                            IDs,
-                            '/PubTator'))
+  # rawOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/',
+  #                           IDs,
+  #                           '/PubTator'))
+  rawOutput <- getURL(str_c('https://www.ncbi.nlm.nih.gov/research/pubtator-api/publications/export/pubtator?pmids=',IDs))
 
   # Create a list of elements from the PubTator website (title, abstract, ...)
   listOutput <- rawOutput %>%
