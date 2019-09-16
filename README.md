@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/Evatar/genescraper.svg?branch=master)](https://travis-ci.org/Evatar/genescraper) [![Coverage Status](https://img.shields.io/codecov/c/github/Evatar/genescraper/master.svg?precision=1)](https://codecov.io/github/Evatar/genescraper?branch=master)
+[![Build Status](https://travis-ci.org/evanamartin/genescraper.svg?branch=master)](https://travis-ci.org/evanamartin/genescraper)
+[![Coverage Status](https://img.shields.io/codecov/c/github/evanamartin/genescraper/master.svg?precision=1)](https://codecov.io/github/evanamartin/genescraper?branch=master)
 
 # genescraper
 
