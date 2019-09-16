@@ -22,5 +22,5 @@ If you do not have a package that genescraper depends on you may get an error as
 
 To install genescraper
 ```r
-devtools::install_github('Evatar/genescraper')
+devtools::install_github('evanamartin/genescraper')
 ```
