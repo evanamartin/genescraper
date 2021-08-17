@@ -3,7 +3,11 @@
 
 # genescraper
 
-genescraper is an R package that mines NCBI databases for genes mentioned in connection with diseases and other medical conditions. It counts the number of articles that mention each gene cited and returns them in a data frame. 
+The R package genescraper performs text mining on the PubMed database for genes mentioned in connection with user specified search keywords. It can be used to identify the genes that appear the most often in articles associated with diseases and other medical conditions. It retrieves all genes mentioned in any of the articles associated with the search, counts the number of articles in which each gene appears, and returns the genes and their counts in a table.
+
+The search keywords are used to find all papers in the PubMed database that match any word or combination of words in the search. The NCBI (National Center for Biotechnology Information) search options are all compatible with genescraper. For example, MeSH (Medical Subject Headings) terms; logical operators such as AND, OR, or NOT; dates; quotation marks (used to group words together); and other terms can all be used to refine the search. 
+
+After finding all papers that match the search criteria, genescraper then accesses their title and abstract. Next, genescraper text mines each title and abstract for human or mouse genes. The number of papers that mention each gene are then counted. The genes and their counts are separated by organism (either human or mouse) and reported in two tables: the first contains all human genes and their associated counts and the second contains the mouse genes and their counts.
 
 ### Motivation
 
